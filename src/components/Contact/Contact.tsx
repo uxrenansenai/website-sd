@@ -21,7 +21,7 @@ export function Contact() {
           <label>E-mail<input name="email" type="email" placeholder="Digite seu e-mail" autoComplete="email" required /></label>
           <label>Como podemos lhe ajudar?<select name="subject" defaultValue="" required><option value="" disabled>Selecione um assunto</option><option>Quero conhecer as soluções</option><option>Tenho um projeto</option><option>Quero fazer parte do time</option><option>Outro assunto</option></select></label>
           <label>Mensagem<textarea name="message" placeholder="Escreva sua mensagem" rows={6} required /></label>
-          <Button className="contact__submit" variant="primary" type="submit">Enviar mensagem</Button>
+          <Button className="contact__submit" variant="primary" type="submit" showArrow={false}>Enviar mensagem</Button>
           {sent && <p className="contact__notice" role="status">Seu aplicativo de e-mail foi aberto com a mensagem preenchida.</p>}
         </form>
         <p className="contact__direct">Prefere escrever direto? <a href="mailto:solucoesdigitais@sc.senai.br">solucoesdigitais@sc.senai.br</a></p>

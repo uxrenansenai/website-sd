@@ -1,170 +1,110 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type UIEvent } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { BrainCircuit, Orbit, CodeXml, Smartphone, ChartNoAxesCombined, GraduationCap } from 'lucide-react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { SectionTitle } from '../SectionTitle/SectionTitle';
 import styles from './Services.module.css';
 
 const services = [
-  {
-    title: 'Inteligência Artificial',
-    description: 'Soluções inteligentes para automatizar processos, explorar dados e criar novas experiências digitais.',
-    tags: ['IA Generativa', 'Machine Learning', 'Automação', 'Visão Computacional'],
-    code: 'AI',
-    visualCaption: 'INTELLIGENCE SYSTEMS',
-    Icon: BrainCircuit,
-  },
-  {
-    title: 'Realidade Estendida',
-    description: 'Experiências imersivas que combinam tecnologias digitais e ambientes reais para treinamento, educação e indústria.',
-    tags: ['Realidade Virtual', 'Realidade Aumentada', '3D', 'Experiências Imersivas'],
-    code: 'XR',
-    visualCaption: 'IMMERSIVE EXPERIENCES',
-    Icon: Orbit,
-  },
-  {
-    title: 'Desenvolvimento Web',
-    description: 'Plataformas e sistemas digitais desenvolvidos para desafios complexos e diferentes contextos de negócio.',
-    tags: ['Plataformas Web', 'Sistemas Corporativos', 'Portais', 'Aplicações'],
-    code: '</>',
-    visualCaption: 'DIGITAL PLATFORMS',
-    Icon: CodeXml,
-  },
-  {
-    title: 'Desenvolvimento Mobile',
-    description: 'Aplicativos e experiências móveis desenvolvidos para conectar pessoas, serviços e negócios.',
-    tags: ['iOS', 'Android', 'Apps Corporativos', 'Produtos Digitais'],
-    code: 'APP',
-    visualCaption: 'CONNECTED PRODUCTS',
-    Icon: Smartphone,
-  },
-  {
-    title: 'Big Data & Analytics',
-    description: 'Transformamos dados em informações relevantes para apoiar decisões e gerar novas oportunidades.',
-    tags: ['Data Analytics', 'Dashboards', 'Business Intelligence', 'Engenharia de Dados'],
-    code: 'DATA',
-    visualCaption: 'DECISION INTELLIGENCE',
-    Icon: ChartNoAxesCombined,
-  },
-  {
-    title: 'EdTech & HealthTech',
-    description: 'Tecnologia aplicada à educação e à saúde para criar experiências digitais mais eficientes e acessíveis.',
-    tags: ['Educação Digital', 'Saúde Digital', 'Plataformas', 'Experiências de Aprendizagem'],
-    code: 'EDU+',
-    visualCaption: 'LEARNING & WELLBEING',
-    Icon: GraduationCap,
-  },
+  { title: 'Inteligência Artificial', description: 'Desenvolvemos modelos preditivos, automação inteligente e soluções de visão computacional.', tags: ['IA generativa', 'Visão computacional', 'Machine learning'], visual: '/figma/services/svg-6.svg' },
+  { title: 'Realidade Estendida', description: 'Experiências imersivas com AR, VR e simulações 3D para treinamento e engajamento.', tags: ['AR', 'VR', 'Simulações 3D'], visual: '/figma/services/svg-11.svg' },
+  { title: 'Desenvolvimento Web', description: 'Plataformas web modernas e seguras para performance e escala.', tags: ['Front-end', 'Back-end', 'Plataformas'], visual: '/figma/services/svg-13.svg' },
+  { title: 'Desenvolvimento Mobile', description: 'Apps nativos e multiplataforma para iOS e Android com foco em performance.', tags: ['iOS', 'Android', 'Multiplataforma'], visual: '/figma/services/svg-16.svg' },
+  { title: 'Big Data & Analytics', description: 'Análise de grandes volumes de dados para insights estratégicos e dashboards.', tags: ['Analytics', 'Dashboards', 'Data Engineering'], visual: '/figma/services/svg-14.svg' },
+  { title: 'EdTech & HealthTech', description: 'Soluções especializadas para educação e saúde com foco em gestão e cuidado.', tags: ['EdTech', 'HealthTech', 'Plataformas digitais'], visual: '/figma/services/svg-17.svg' },
 ];
 
-const mobileQuery = '(max-width: 760px)';
+type Metrics = { travel: number; centers: number[]; widths: number[]; first: number; last: number };
+const emptyMetrics: Metrics = { travel: 0, centers: [], widths: [], first: 0, last: 0 };
+
+function usePinnedLayout() {
+  const [pinned, setPinned] = useState(false);
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 1301px), (min-width: 901px) and (hover: hover) and (pointer: fine)');
+    const update = () => setPinned(query.matches && !reduced);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, [reduced]);
+  return pinned;
+}
+
+function ServiceCard({ service, index, progress, metrics, pinned, mobileActive }: {
+  service: typeof services[number]; index: number; progress: MotionValue<number>; metrics: Metrics; pinned: boolean; mobileActive: boolean;
+}) {
+  const proximity = useTransform(progress, value => {
+    if (!metrics.centers.length) return index === 0 ? 1 : 0;
+    const focal = metrics.first + (metrics.last - metrics.first) * value;
+    const cardCenter = metrics.centers[index] - metrics.travel * value;
+    return Math.max(0, 1 - Math.abs(cardCenter - focal) / (metrics.widths[index] * 1.25));
+  });
+  const scale = useTransform(proximity, value => 0.94 + value * 0.12);
+  const opacity = useTransform(proximity, value => 0.72 + value * 0.28);
+  const glow = useTransform(proximity, value => 0.08 + value * 0.42);
+
+  return (
+    <motion.article className={`${styles.card} ${!pinned && mobileActive ? styles.cardActive : ''}`} style={pinned ? { scale, opacity } : undefined}>
+      <motion.span className={styles.activeGlow} style={pinned ? { opacity: glow } : undefined} aria-hidden="true" />
+      <div className={styles.visual}><img src={service.visual} alt="" /><span className={styles.visualShade} /></div>
+      <div className={styles.content}><h3>{service.title}</h3><p>{service.description}</p><ul>{service.tags.map(tag => <li key={tag}>{tag}</li>)}</ul></div>
+    </motion.article>
+  );
+}
 
 export function Services() {
+  const pinned = usePinnedLayout();
   const sectionRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = Boolean(useReducedMotion());
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia(mobileQuery).matches);
-  const [travel, setTravel] = useState(0);
-  const [mobileProgress, setMobileProgress] = useState(0);
-  const stickyEnabled = !isMobile && !reducedMotion;
+  const [metrics, setMetrics] = useState<Metrics>(emptyMetrics);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -travel]);
+  const x = useTransform(scrollYProgress, value => pinned ? -metrics.travel * value : 0);
 
   useEffect(() => {
-    const media = window.matchMedia(mobileQuery);
-    const update = () => {
-      const mobile = media.matches;
-      setIsMobile(current => {
-        if (current !== mobile) {
-          setMobileProgress(0);
-          railRef.current?.scrollTo({ left: 0 });
-        }
-        return mobile;
-      });
-    };
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-
-  useLayoutEffect(() => {
     const rail = railRef.current;
     const track = trackRef.current;
     if (!rail || !track) return;
-
     const measure = () => {
-      const distance = stickyEnabled ? Math.max(0, track.scrollWidth - rail.clientWidth) : 0;
-      setTravel(current => current === distance ? current : distance);
+      const cards = Array.from(track.querySelectorAll<HTMLElement>('article'));
+      const trackLeft = track.getBoundingClientRect().left;
+      const centers = cards.map(card => card.getBoundingClientRect().left - trackLeft + card.offsetWidth / 2);
+      const widths = cards.map(card => card.offsetWidth);
+      const travel = Math.max(0, track.scrollWidth - rail.clientWidth);
+      setMetrics({ travel, centers, widths, first: centers[0] ?? 0, last: (centers.at(-1) ?? 0) - travel });
     };
-
-    measure();
     const observer = new ResizeObserver(measure);
     observer.observe(rail);
     observer.observe(track);
-    window.addEventListener('resize', measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [stickyEnabled]);
+    measure();
+    return () => observer.disconnect();
+  }, [pinned]);
 
-  const handleRailScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-    if (stickyEnabled) return;
-    const rail = event.currentTarget;
-    const range = rail.scrollWidth - rail.clientWidth;
-    setMobileProgress(range > 0 ? rail.scrollLeft / range : 0);
-  }, [stickyEnabled]);
-
-  // Keep the sticky passage short and let the whole rail travel through it continuously.
-  const sectionHeight = stickyEnabled ? '180vh' : undefined;
-  const progress = stickyEnabled ? scrollYProgress : mobileProgress;
+  useEffect(() => {
+    if (pinned || !railRef.current || !trackRef.current) return;
+    const rail = railRef.current;
+    const cards = Array.from(trackRef.current.querySelectorAll('article'));
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveIndex(cards.indexOf(visible.target as HTMLElement));
+    }, { root: rail, threshold: [0.45, 0.6, 0.75] });
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  }, [pinned]);
 
   return (
-    <section className={styles.section} id="servicos" ref={sectionRef} style={sectionHeight ? { height: sectionHeight } : undefined}>
+    <section className={`${styles.section} ${pinned ? styles.sectionPinned : ''}`} id="servicos" aria-labelledby="services-title" ref={sectionRef} style={pinned ? { '--service-travel': `${metrics.travel}px` } as CSSProperties : undefined}>
       <div className={styles.sticky}>
-        <div className={`${styles.intro} page-container`}>
-          <SectionTitle
-            dark
-            className={styles.heading}
-            eyebrow="SERVIÇOS"
-            title={<>Tecnologia para transformar<br className={styles.desktopBreak} /> desafios em soluções.</>}
-          />
-        </div>
-
-        <div className={styles.rail} ref={railRef} onScroll={handleRailScroll} role="region" aria-label="Soluções e serviços" tabIndex={stickyEnabled ? undefined : 0}>
-          <motion.div className={styles.track} ref={trackRef} style={{ x: stickyEnabled ? x : 0 }}>
-            {services.map(({ title, description, tags, code, visualCaption, Icon }, index) => (
-              <motion.article
-                className={styles.card}
-                data-service-card
-                aria-labelledby={`service-title-${index}`}
-                key={title}
-                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-                whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.18 }}
-                transition={{ duration: 0.55, ease: 'easeOut', delay: index * 0.035 }}
-              >
-                <div className={styles.copy}>
-                  <span className={styles.number}>{String(index + 1).padStart(2, '0')}<span aria-hidden="true"> / 06</span></span>
-                  <h3 id={`service-title-${index}`}>{title}</h3>
-                  <p>{description}</p>
-                  <ul className={styles.tags} aria-label={`Especialidades em ${title}`}>
-                    {tags.map(tag => <li key={tag}>{tag}</li>)}
-                  </ul>
-                </div>
-                <div className={styles.visual} aria-hidden="true">
-                  <span className={styles.visualCode}>{code}</span>
-                  <Icon className={styles.visualIcon} strokeWidth={1.1} />
-                  <span className={styles.visualCaption}>{visualCaption}</span>
-                  <span className={styles.visualOrbit} />
-                </div>
-              </motion.article>
-            ))}
-          </motion.div>
-        </div>
-
-        <div className={`${styles.progress} page-container`} aria-label="Progresso pelos serviços">
-          <div className={styles.progressTrack} aria-hidden="true"><motion.span style={{ scaleX: progress }} /></div>
-          <span className={styles.progressHint}>{isMobile ? 'ARRASTE PARA EXPLORAR' : 'ROLE PARA EXPLORAR'}</span>
+        <div className={styles.layout + ' page-container'}>
+          <div className={styles.intro}>
+            <SectionTitle dark className={styles.heading} eyebrow="SERVIÇOS" title={<span id="services-title">Temos a solução que você precisa</span>} />
+            <p className={styles.lead}>Desenvolvemos com as tecnologias mais modernas para garantir eficiência, escalabilidade e inovação na sua operação.</p>
+            <a className={styles.cta} href="#contato">Fale com nosso time</a>
+          </div>
+          <div className={`${styles.rail} ${!pinned ? styles.railSwipe : ''}`} role="region" aria-label="Soluções e serviços" tabIndex={0} ref={railRef}>
+            <motion.div className={styles.track} ref={trackRef} style={pinned ? { x } : undefined}>
+              {services.map((service, index) => <ServiceCard key={service.title} service={service} index={index} progress={scrollYProgress} metrics={metrics} pinned={pinned} mobileActive={activeIndex === index} />)}
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

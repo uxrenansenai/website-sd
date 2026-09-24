@@ -1,20 +1,23 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { fadeUp, scaleIn, staggerContainer } from '../../styles/motion';
-import { Sprite } from '../Sprite/Sprite';
+import { fadeUp, staggerContainer } from '../../styles/motion';
+import { Button } from '../Button/Button';
+import { AwsMap } from './AwsMap';
 
 export function Aws() {
   const reduced = useReducedMotion();
   return (
-    <section className="aws" id="aws">
-      <motion.div className="aws__inner page-container" variants={reduced ? undefined : staggerContainer} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.3 }}>
-        <motion.div variants={reduced ? undefined : scaleIn}><Sprite className="sprite--aws" label="Selo AWS Partner Select Tier Services" /></motion.div>
+    <section className="aws" id="aws" aria-labelledby="aws-title">
+      <motion.div className="aws__inner page-container" variants={reduced ? undefined : staggerContainer} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="aws__headline" variants={reduced ? undefined : fadeUp}>
+          <span className="eyebrow">SERVIÇOS</span>
+          <h2 id="aws-title">Soluções <span className="aws__badge"><img src="/figma/aws/raw-2.png" alt="AWS" /></span> em nuvem<br />prontas para escalar</h2>
+        </motion.div>
         <motion.div className="aws__copy" variants={reduced ? undefined : fadeUp}>
-          <span className="eyebrow">SOLUÇÕES AWS</span>
-          <h2>Somos parceiros<br /> da AWS</h2>
-          <h3>Tecnologia em nuvem para transformar sua operação</h3>
-          <p>Combinamos sua tecnologia de nuvem com mais de 20 anos de experiência no desenvolvimento de soluções para a indústria. Assim, ajudamos empresas a modernizar sistemas, migrar para a nuvem e criar produtos digitais preparados para crescer com segurança, escala e eficiência.</p>
+          <p>Como parceiros AWS, combinamos infraestrutura em nuvem e expertise para modernizar, escalar e proteger produtos digitais.</p>
+          <Button variant="secondary" href="#contato" showArrow={false}>Construa uma parceria</Button>
         </motion.div>
       </motion.div>
+      <AwsMap />
     </section>
   );
 }
