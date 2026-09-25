@@ -7,7 +7,7 @@ export const fadeUp = {
 
 export const headingReveal = {
   hidden: { y: 28, clipPath: 'inset(0 0 100% 0)' },
-  visible: { y: 0, clipPath: 'inset(0 0 0% 0)', transition: { duration: 0.78, ease: motionEase } },
+  visible: { y: 0, clipPath: 'inset(0 0 -0.14em 0)', transition: { duration: 0.78, ease: motionEase } },
 };
 
 export const imageReveal = {

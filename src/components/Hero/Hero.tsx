@@ -1,37 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { fadeUp, headingReveal, scaleIn, staggerContainer } from '../../styles/motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { fadeUp, headingReveal, staggerContainer } from '../../styles/motion';
 import { Button } from '../Button/Button';
 
 export function Hero({ ready = true }: { ready?: boolean }) {
   const reduced = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const [compact, setCompact] = useState(false);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-  const contentDesktopY = useTransform(scrollYProgress, [0, 1], [0, -42]);
-  const contentMobileY = useTransform(scrollYProgress, [0, 1], [0, -14]);
-  const markDesktopY = useTransform(scrollYProgress, [0, 1], [0, -52]);
-  const markMobileY = useTransform(scrollYProgress, [0, 1], [0, -18]);
-
-  useEffect(() => {
-    const query = window.matchMedia('(max-width: 900px)');
-    const update = () => setCompact(query.matches);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, []);
 
   return (
-    <section className="hero" id="topo" aria-labelledby="hero-title" ref={sectionRef}>
-      <div className="hero__glow" aria-hidden="true" />
-      <motion.div className="hero__content page-container" variants={reduced ? undefined : staggerContainer} initial={reduced ? undefined : 'hidden'} animate={reduced ? undefined : ready ? 'visible' : 'hidden'} style={reduced ? undefined : { y: compact ? contentMobileY : contentDesktopY }}>
-        <motion.div className="hero__mark-wrap" variants={reduced ? undefined : scaleIn} style={reduced ? undefined : { y: compact ? markMobileY : markDesktopY }}>
-          <motion.div className="hero__mark-float" animate={reduced ? undefined : { y: [4, -8, 4], rotate: [-0.7, 0.7, -0.7] }} transition={reduced ? undefined : { duration: 6, ease: 'easeInOut', repeat: Infinity }}>
-            <img className="hero__mark" src="/figma/hero/raw-3.png" alt="Símbolo tridimensional azul do SENAI Soluções Digitais" />
-          </motion.div>
-        </motion.div>
-        <motion.h1 id="hero-title" variants={reduced ? undefined : headingReveal}>Soluções que <span>transformam o futuro</span> da indústria</motion.h1>
-        <motion.p variants={reduced ? undefined : fadeUp}>Parte do ecossistema FIESC, o maior sistema industrial de Santa Catarina. Desenvolvemos soluções digitais para empresas que precisam de mais do que uma agência, precisam de um parceiro que entende a indústria por dentro.</motion.p>
+    <section className="hero hero--figma" id="topo" aria-labelledby="hero-title">
+      <motion.img className="hero__blur hero__blur--left" src="/figma/hero-v2/blur.svg" alt="" aria-hidden="true" initial={reduced ? undefined : { opacity: 0 }} animate={reduced || ready ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.7 }} />
+      <motion.img className="hero__blur hero__blur--right" src="/figma/hero-v2/blur.svg" alt="" aria-hidden="true" initial={reduced ? undefined : { opacity: 0 }} animate={reduced || ready ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.7, delay: 0.08 }} />
+      <motion.img className="hero__decor hero__decor--left" src="/figma/hero-v2/logo-a.svg" alt="" aria-hidden="true" initial={reduced ? undefined : { opacity: 0, x: -28 }} animate={reduced || ready ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }} transition={{ duration: 0.85, ease: 'easeOut' }} />
+      <motion.img className="hero__decor hero__decor--right" src="/figma/hero-v2/logo-b.svg" alt="" aria-hidden="true" initial={reduced ? undefined : { opacity: 0, x: 28 }} animate={reduced || ready ? { opacity: 1, x: 0 } : { opacity: 0, x: 28 }} transition={{ duration: 0.85, ease: 'easeOut', delay: 0.08 }} />
+      <motion.div className="hero__content hero__content--figma page-container" variants={reduced ? undefined : staggerContainer} initial={reduced ? undefined : 'hidden'} animate={reduced ? undefined : ready ? 'visible' : 'hidden'}>
+        <motion.h1 id="hero-title" className="hero__title--figma" variants={reduced ? undefined : headingReveal}>
+          <span className="hero__title-line">Soluções que</span>
+          <span className="hero__title-line hero__title-line--blue">transformam o</span>
+          <span className="hero__title-line"><span className="hero__title-line--blue">futuro</span> da indústria</span>
+        </motion.h1>
+        <motion.p variants={reduced ? undefined : fadeUp}>Desenvolvemos soluções digitais para transformar desafios da indústria em novas possibilidades. De plataformas e aplicativos a experiências com IA, dados e tecnologias emergentes, dentro do ecossistema FIESC.</motion.p>
         <motion.div className="hero__actions" variants={reduced ? undefined : fadeUp}>
           <Button variant="primary-dark" href="#contato" showArrow={false}>Fale com nosso time</Button>
           <Button variant="text-link" href="#cases">Conheça nossos cases</Button>
