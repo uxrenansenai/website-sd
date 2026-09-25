@@ -15,11 +15,13 @@ const services = [
 type Metrics = { travel: number; centers: number[]; widths: number[]; first: number; last: number };
 const emptyMetrics: Metrics = { travel: 0, centers: [], widths: [], first: 0, last: 0 };
 
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
 function usePinnedLayout() {
   const [pinned, setPinned] = useState(false);
   const reduced = useReducedMotion();
   useEffect(() => {
-    const query = window.matchMedia('(min-width: 1301px), (min-width: 901px) and (hover: hover) and (pointer: fine)');
+    const query = window.matchMedia('(min-width: 1101px), (min-width: 901px) and (hover: hover) and (pointer: fine)');
     const update = () => setPinned(query.matches && !reduced);
     update();
     query.addEventListener('change', update);
@@ -28,21 +30,23 @@ function usePinnedLayout() {
   return pinned;
 }
 
-function ServiceCard({ service, index, progress, metrics, pinned, mobileActive }: {
-  service: typeof services[number]; index: number; progress: MotionValue<number>; metrics: Metrics; pinned: boolean; mobileActive: boolean;
+function ServiceCard({ service, index, progress, metrics, pinned, mobileActive, activeIndex }: {
+  service: typeof services[number]; index: number; progress: MotionValue<number>; metrics: Metrics; pinned: boolean; mobileActive: boolean; activeIndex: number;
 }) {
   const proximity = useTransform(progress, value => {
     if (!metrics.centers.length) return index === 0 ? 1 : 0;
-    const focal = metrics.first + (metrics.last - metrics.first) * value;
+    const focal = metrics.first;
     const cardCenter = metrics.centers[index] - metrics.travel * value;
-    return Math.max(0, 1 - Math.abs(cardCenter - focal) / (metrics.widths[index] * 1.25));
+    const focusDistance = Math.abs(cardCenter - focal);
+    const focusRadius = Math.max(metrics.widths[index] * 1.2, 360);
+    return clamp01(1 - focusDistance / focusRadius);
   });
   const scale = useTransform(proximity, value => 0.94 + value * 0.12);
   const opacity = useTransform(proximity, value => 0.72 + value * 0.28);
-  const glow = useTransform(proximity, value => 0.08 + value * 0.42);
+  const glow = useTransform(proximity, value => 0.04 + value * 0.56);
 
   return (
-    <motion.article className={`${styles.card} ${!pinned && mobileActive ? styles.cardActive : ''}`} style={pinned ? { scale, opacity } : undefined}>
+    <motion.article className={`${styles.card} ${!pinned && mobileActive ? styles.cardActive : ''}`} style={pinned ? { scale, opacity, zIndex: index === activeIndex ? 3 : 1, transformOrigin: 'center center' } : undefined}>
       <motion.span className={styles.activeGlow} style={pinned ? { opacity: glow } : undefined} aria-hidden="true" />
       <div className={styles.visual}><img src={service.visual} alt="" /><span className={styles.visualShade} /></div>
       <div className={styles.content}><h3>{service.title}</h3><p>{service.description}</p><ul>{service.tags.map(tag => <li key={tag}>{tag}</li>)}</ul></div>
@@ -61,15 +65,30 @@ export function Services() {
   const x = useTransform(scrollYProgress, value => pinned ? -metrics.travel * value : 0);
 
   useEffect(() => {
+    if (!pinned || metrics.centers.length === 0) return;
+    const updateActiveIndex = (progress: number) => {
+      const nextIndex = metrics.centers.reduce((closestIndex, center, index) => {
+        const focalDistance = Math.abs(center - metrics.travel * progress - metrics.first);
+        const closestDistance = Math.abs(metrics.centers[closestIndex] - metrics.travel * progress - metrics.first);
+        return focalDistance < closestDistance ? index : closestIndex;
+      }, 0);
+      setActiveIndex(previous => previous === nextIndex ? previous : nextIndex);
+    };
+    updateActiveIndex(scrollYProgress.get());
+    return scrollYProgress.on('change', updateActiveIndex);
+  }, [metrics, pinned, scrollYProgress]);
+
+  useEffect(() => {
     const rail = railRef.current;
     const track = trackRef.current;
     if (!rail || !track) return;
     const measure = () => {
       const cards = Array.from(track.querySelectorAll<HTMLElement>('article'));
-      const trackLeft = track.getBoundingClientRect().left;
-      const centers = cards.map(card => card.getBoundingClientRect().left - trackLeft + card.offsetWidth / 2);
+      // Use layout offsets instead of transformed bounds so scale never changes
+      // the reserved spacing or the focal coordinates.
+      const centers = cards.map(card => card.offsetLeft + card.offsetWidth / 2);
       const widths = cards.map(card => card.offsetWidth);
-      const travel = Math.max(0, track.scrollWidth - rail.clientWidth);
+      const travel = Math.max(0, (centers.at(-1) ?? 0) - (centers[0] ?? 0));
       setMetrics({ travel, centers, widths, first: centers[0] ?? 0, last: (centers.at(-1) ?? 0) - travel });
     };
     const observer = new ResizeObserver(measure);
@@ -102,7 +121,7 @@ export function Services() {
           </div>
           <div className={`${styles.rail} ${!pinned ? styles.railSwipe : ''}`} role="region" aria-label="Soluções e serviços" tabIndex={0} ref={railRef}>
             <motion.div className={styles.track} ref={trackRef} style={pinned ? { x } : undefined}>
-              {services.map((service, index) => <ServiceCard key={service.title} service={service} index={index} progress={scrollYProgress} metrics={metrics} pinned={pinned} mobileActive={activeIndex === index} />)}
+              {services.map((service, index) => <ServiceCard key={service.title} service={service} index={index} progress={scrollYProgress} metrics={metrics} pinned={pinned} mobileActive={activeIndex === index} activeIndex={activeIndex} />)}
             </motion.div>
           </div>
         </div>
