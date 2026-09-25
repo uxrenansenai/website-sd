@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import styles from './Button.module.css';
 
 type SharedProps = {
-  variant: 'primary' | 'secondary';
+  variant: 'primary-dark' | 'primary-light' | 'text-link';
   children: ReactNode;
   className?: string;
   showArrow?: boolean;

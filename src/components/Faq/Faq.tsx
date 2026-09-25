@@ -35,7 +35,7 @@ export function Faq() {
               <AnimatePresence initial={false}>{isOpen && <motion.div id={answerId} className="faq__answer" initial={reduced ? false : { opacity: 0, height: 0, y: -5 }} animate={{ opacity: 1, height: 'auto', y: 0 }} exit={reduced ? undefined : { opacity: 0, height: 0, y: -5 }} transition={{ duration: reduced ? 0 : 0.22 }}><p>Resposta a ser confirmada e inserida pela equipe SENAI Soluções Digitais.</p></motion.div>}</AnimatePresence>
             </div>; })}
           </div>
-          <div className="faq__cta"><span>Ainda ficou alguma dúvida?</span><Button variant="secondary" href="#contato">Fale com nosso time</Button></div>
+          <div className="faq__cta"><span>Ainda ficou alguma dúvida?</span><Button variant="primary-dark" href="#contato">Fale com nosso time</Button></div>
         </div>
       </div>
     </section>

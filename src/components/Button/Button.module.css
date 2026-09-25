@@ -1,1 +1,15 @@
-.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:45px;padding:0 28px;border:1px solid transparent;border-radius:999px;color:#fff;font:inherit;font-size:14px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;transition:transform .2s,border-color .2s,background-color .2s,color .2s}.primary{background:#fff;border-color:#fff;color:#060606}.secondary{background:rgb(255 255 255 / 8%);border-color:rgb(255 255 255 / 25%);color:#fff}.button:hover{transform:translateY(-2px)}.primary:hover{background:#e9f4ff;border-color:#e9f4ff}.secondary:hover{border-color:var(--color-brand-blue);background:rgb(10 138 255 / 15%)}.button:active{transform:translateY(0)}.label{white-space:nowrap}.arrow{flex:none}@media(prefers-reduced-motion:reduce){.button{transition:none}.button:hover{transform:none}}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:45px;padding:0 28px;border:1px solid transparent;border-radius:999px;color:#fff;font-family:var(--font-body);font-size:14px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;transition:transform .24s ease,border-color .24s ease,background-color .24s ease,color .24s ease,box-shadow .24s ease}
+.primary-dark{background:#11151b;border-color:rgb(10 138 255 / 55%);color:#fff}
+.primary-dark:hover{border-color:#0a8aff;background:rgb(10 138 255 / 12%);box-shadow:0 0 0 1px rgb(10 138 255 / 35%),0 0 16px rgb(10 138 255 / 25%),0 0 32px rgb(10 138 255 / 12%)}
+.primary-light{background:#0a8aff;border-color:#0a8aff;color:#fff}
+.primary-light:hover{border-color:#3aa5ff;background:#0878dc;box-shadow:0 0 0 1px rgb(10 138 255 / 35%),0 0 16px rgb(10 138 255 / 24%),0 0 28px rgb(10 138 255 / 10%)}
+.text-link{min-height:0;border-color:transparent;border-radius:0;background:transparent;padding:0;color:inherit;box-shadow:none}
+.text-link:hover{background:transparent;border-color:transparent;color:inherit;box-shadow:none}
+.button:focus-visible{outline:2px solid #0a8aff;outline-offset:3px}
+.button:hover{transform:translateY(-1px)}
+.text-link:hover{transform:none}
+.button:active{transform:translateY(0)}
+.label{white-space:nowrap}
+.arrow{flex:none;transition:transform .24s ease}
+.text-link:hover .arrow,.text-link:focus-visible .arrow{transform:translateX(4px)}
+@media(prefers-reduced-motion:reduce){.button,.arrow{transition:none}.button:hover,.button:active{transform:none}.text-link:hover .arrow,.text-link:focus-visible .arrow{transform:none}}

@@ -2,6 +2,12 @@ node_modules/
 dist/
 coverage/
 .vite/
+.cache/
+cache/
+tmp/
+temp/
+*.tmp
+*.temp
 *.tsbuildinfo
 *.log
 .env

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { Button } from '../Button/Button';
 import { SectionTitle } from '../SectionTitle/SectionTitle';
 import styles from './Services.module.css';
 
@@ -34,7 +35,7 @@ function ServiceCard({ service, index, progress, metrics, pinned, mobileActive, 
   service: typeof services[number]; index: number; progress: MotionValue<number>; metrics: Metrics; pinned: boolean; mobileActive: boolean; activeIndex: number;
 }) {
   const proximity = useTransform(progress, value => {
-    if (!metrics.centers.length) return index === 0 ? 1 : 0;
+    if (!metrics.centers.length) return 0;
     const focal = metrics.first;
     const cardCenter = metrics.centers[index] - metrics.travel * value;
     const focusDistance = Math.abs(cardCenter - focal);
@@ -60,7 +61,7 @@ export function Services() {
   const railRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [metrics, setMetrics] = useState<Metrics>(emptyMetrics);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
   const x = useTransform(scrollYProgress, value => pinned ? -metrics.travel * value : 0);
 
@@ -117,7 +118,7 @@ export function Services() {
           <div className={styles.intro}>
             <SectionTitle dark className={styles.heading} eyebrow="SERVIÇOS" title={<span id="services-title">Temos a solução que você precisa</span>} />
             <p className={styles.lead}>Desenvolvemos com as tecnologias mais modernas para garantir eficiência, escalabilidade e inovação na sua operação.</p>
-            <a className={styles.cta} href="#contato">Fale com nosso time</a>
+            <Button variant="primary-dark" href="#contato" showArrow={false}>Fale com nosso time</Button>
           </div>
           <div className={`${styles.rail} ${!pinned ? styles.railSwipe : ''}`} role="region" aria-label="Soluções e serviços" tabIndex={0} ref={railRef}>
             <motion.div className={styles.track} ref={trackRef} style={pinned ? { x } : undefined}>

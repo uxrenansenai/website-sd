@@ -1,10 +1,11 @@
 import { motion, useInView, useReducedMotion } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button } from '../Button/Button';
 import { CountUp } from './CountUp';
 
 const aboutImages = {
   showcase: '/figma/about-v2/raw-1.png',
+  showcaseVideo: '/figma/about-v2/video-evento.mp4',
   building: '/figma/about-v2/raw-5.png',
   audience: '/figma/about-v2/raw-6.jpeg',
 };
@@ -40,8 +41,31 @@ export function About() {
   const reduced = useReducedMotion();
   const aboutRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const showcaseVideoRef = useRef<HTMLVideoElement>(null);
   const aboutVisible = useInView(aboutRef, { once: true, amount: 0.1 });
   const statsVisible = useInView(statsRef, { once: true, amount: 0.35 });
+  useEffect(() => {
+    const video = showcaseVideoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    if (reduced || !aboutVisible) return;
+
+    const play = () => {
+      video.muted = true;
+      void video.play().catch(() => undefined);
+    };
+
+    play();
+    video.addEventListener('loadeddata', play);
+    video.addEventListener('canplay', play);
+
+    return () => {
+      video.removeEventListener('loadeddata', play);
+      video.removeEventListener('canplay', play);
+    };
+  }, [aboutVisible, reduced]);
+
 
   return (
     <section ref={aboutRef} className="about surface-light" id="sobre" aria-labelledby="about-title">
@@ -55,7 +79,7 @@ export function About() {
           <div className="about__left-column">
             <div className="about__narrative">
               <p>A SENAI Soluções Digitais faz parte do SENAI/SC, uma das entidades que compõem a FIESC - potência das indústrias do Estado de Santa Catarina. Dentro desse ecossistema, contamos com um time diverso e capacitado, que trabalha em conjunto com diferentes áreas e parceiros para transformar tecnologia, inovação e conhecimento em soluções para desafios reais.</p>
-              <Button className="about__cta" variant="primary" href="#contato" showArrow={false}>Construa uma parceria</Button>
+              <Button className="about__cta" variant="primary-light" href="#contato" showArrow={false}>Construa uma parceria</Button>
             </div>
 
             <div className="about__stats about__stats--left" ref={statsRef}>
@@ -68,7 +92,7 @@ export function About() {
             </div>
 
             <motion.div className="about__showcase" variants={reduced ? undefined : mediaReveal} custom={0.24} initial={reduced ? 'visible' : 'hidden'} animate={reduced || aboutVisible ? 'visible' : 'hidden'}>
-              <video autoPlay={!reduced} muted loop playsInline preload="metadata" poster={aboutImages.showcase} aria-hidden="true" />
+              <video ref={showcaseVideoRef} autoPlay={!reduced} muted loop playsInline preload="auto" poster={aboutImages.showcase} aria-hidden="true"><source src={aboutImages.showcaseVideo} type="video/mp4" /></video>
             </motion.div>
           </div>
 
