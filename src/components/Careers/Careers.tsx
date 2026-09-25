@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 
+import { fadeUp, headingReveal, staggerContainer } from '../../styles/motion';
 import { Button } from '../Button/Button';
 import styles from './Careers.module.css';
 
@@ -7,21 +8,6 @@ const opportunitiesUrl = 'https://fiesc.com.br/trabalhe-conosco';
 const glassdoorUrl = 'https://www.glassdoor.com.br/Avalia%C3%A7%C3%B5es/SENAI-Solu%C3%A7%C3%B5es-Digitais-Avalia%C3%A7%C3%B5es-E10249394.htm';
 const linkedinUrl = 'https://www.linkedin.com/company/senai-solu%C3%A7%C3%B5es-digitais/home/';
 const instagramUrl = 'https://www.instagram.com/senaisolucoesdigitais.sc/';
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: 'easeOut' as const } },
-};
-
-const revealHeadline = {
-  hidden: { opacity: 0, y: '100%' },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.74, ease: 'easeOut' as const } },
-};
-
-const stagger = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0.08, staggerChildren: 0.11 } },
-};
 
 const dividerReveal = {
   hidden: { scaleX: 0, opacity: 0 },
@@ -37,7 +23,7 @@ export function Careers() {
     <section className={styles.section} id="trabalhe-conosco" aria-labelledby="careers-title">
       <motion.div
         className="page-container"
-        variants={reduced ? undefined : stagger}
+        variants={reduced ? undefined : staggerContainer}
         initial={initial}
         whileInView={animate}
         viewport={{ once: true, amount: 0.28 }}
@@ -46,7 +32,7 @@ export function Careers() {
           <div className={styles.headingBlock}>
             <motion.p className={styles.eyebrow} variants={reduced ? undefined : fadeUp}>Trabalhe conosco</motion.p>
             <div className={styles.headlineMask}>
-              <motion.h2 id="careers-title" variants={reduced ? undefined : revealHeadline}>
+              <motion.h2 id="careers-title" variants={reduced ? undefined : headingReveal}>
                 Nossa história<br />continua com você.
               </motion.h2>
             </div>

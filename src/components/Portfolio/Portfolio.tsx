@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { SectionTitle } from '../SectionTitle/SectionTitle';
-import { fadeUp, staggerContainer } from '../../styles/motion';
+import { fadeUp, imageReveal, staggerContainer } from '../../styles/motion';
 
 const filters = ['Realidade Estendida', 'Web', 'Mobile', 'Inteligência Artificial', 'EdTech & HealthTech', 'Big Data & Analytics'];
 const cases = [
@@ -26,9 +26,9 @@ export function Portfolio() {
     <section className="portfolio surface-light" id="cases" aria-labelledby="portfolio-title">
       <div className="page-container">
         <SectionTitle eyebrow="CASES" title={<span id="portfolio-title">Conheça nossas soluções</span>} />
-        <div className="portfolio__filters" role="group" aria-label="Filtrar cases">
+        <motion.div className="portfolio__filters" role="group" aria-label="Filtrar cases" variants={reduced ? undefined : fadeUp} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.5 }}>
           {filters.map((filter, index) => <button key={filter} type="button" className={active === index ? 'is-active' : ''} aria-pressed={active === index} onClick={() => select(index)}>{filter}</button>)}
-        </div>
+        </motion.div>
         <div className="portfolio__carousel">
           <button className="round-arrow" type="button" aria-label="Case anterior" onClick={() => select(active - 1)}><ArrowLeft size={18} /></button>
           <motion.article className="portfolio__case" key={selected.title} variants={reduced ? undefined : staggerContainer} initial={reduced ? undefined : 'hidden'} animate={reduced ? undefined : 'visible'}>
@@ -37,7 +37,7 @@ export function Portfolio() {
               <h3>{selected.title}</h3>
               <p>{selected.description}</p>
             </motion.div>
-            <motion.div className="portfolio__visual" variants={reduced ? undefined : fadeUp}>
+            <motion.div className="portfolio__visual" variants={reduced ? undefined : imageReveal}>
               <div className="portfolio__characters"><img src={active === 0 ? '/figma/cases/raw-2.png' : '/figma/cases/raw-3.png'} alt="Avatares tridimensionais do SENAI Lab experience" /></div>
               <div className="portfolio__screens">{screenImages.map((src, index) => <img key={src} src={src} alt={`Tela ${index + 1} do SENAI Lab experience`} />)}</div>
             </motion.div>

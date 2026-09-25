@@ -1,27 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 
+import { fadeUp, headingReveal, imageReveal, staggerContainer } from '../../styles/motion';
 import styles from './Press.module.css';
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: 'easeOut' as const } },
-};
-
-const revealHeadline = {
-  hidden: { opacity: 0, y: '100%' },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.74, ease: 'easeOut' as const } },
-};
-
-const headingVariants = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0.08, staggerChildren: 0.11 } },
-};
-
-const cardReveal = {
-  hidden: { opacity: 0, y: 24, scale: 0.98 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.62, ease: 'easeOut' as const } },
-};
 
 const stories = [
   {
@@ -56,27 +37,27 @@ export function Press() {
     <section className={styles.section} id="midia" aria-labelledby="press-title">
       <div className={styles.backgroundGlow} aria-hidden="true"><img src="/figma/press-v2/blue-cloud-glow.svg" alt="" /></div>
       <motion.div className="page-container" initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.22 }}>
-        <motion.header className={styles.heading} variants={reduced ? undefined : headingVariants}>
+        <motion.header className={styles.heading} variants={reduced ? undefined : staggerContainer}>
           <motion.span className={styles.eyebrow} variants={reduced ? undefined : fadeUp}>NA MÍDIA</motion.span>
           <div className={styles.titleMask}>
-            <motion.h2 id="press-title" variants={reduced ? undefined : revealHeadline}>O que dizem sobre nós</motion.h2>
+            <motion.h2 id="press-title" variants={reduced ? undefined : headingReveal}>O que dizem sobre nós</motion.h2>
           </div>
           <motion.p variants={reduced ? undefined : fadeUp}>Reconhecimento que vai além dos projetos. Veja como o mercado enxerga o trabalho da SENAI Soluções Digitais.</motion.p>
         </motion.header>
-        <div className={styles.grid}>
+        <motion.div className={styles.grid} variants={reduced ? undefined : staggerContainer}>
           {stories.map((story) => (
-            <motion.a className={styles.card} key={story.title} href={story.href} target="_blank" rel="noopener noreferrer" aria-label={story.ariaLabel} variants={reduced ? undefined : cardReveal}>
-              <div className={styles.imagePanel}>
+            <motion.a className={styles.card} key={story.title} href={story.href} target="_blank" rel="noopener noreferrer" aria-label={story.ariaLabel} variants={reduced ? undefined : fadeUp}>
+              <motion.div className={styles.imagePanel} variants={reduced ? undefined : imageReveal}>
                 <span className={styles.cardBlur} aria-hidden="true"><img src="/figma/press-v2/blur.svg" alt="" /></span>
                 <img className={`${styles.logo} ${story.logoClass}`} src={story.logo} alt={`${story.publication}, veículo da reportagem`} />
-              </div>
+              </motion.div>
               <div className={styles.cardBody}>
                 <h3>{story.title}</h3>
                 <span className={styles.readMore}>Ler matéria <ArrowUpRight size={17} aria-hidden="true" /></span>
               </div>
             </motion.a>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -1,0 +1,24 @@
+@media (hover: hover) and (pointer: fine) {
+  .portfolio__characters img,
+  .portfolio__screens img {
+    transition: transform .36s cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .portfolio__case:hover .portfolio__characters img,
+  .portfolio__case:focus-within .portfolio__characters img {
+    transform: scale(1.025);
+  }
+
+  .portfolio__case:hover .portfolio__screens img,
+  .portfolio__case:focus-within .portfolio__screens img {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio__characters img,
+  .portfolio__screens img {
+    transition: none;
+    transform: none !important;
+  }
+}

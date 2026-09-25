@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
+import { fadeUp, headingReveal, staggerContainer } from '../../styles/motion';
 import { Button } from '../Button/Button';
 import styles from './Contact.module.css';
 
@@ -56,7 +57,7 @@ const configs: Record<Journey, JourneyConfig> = {
 };
 
 const optionOrder: Journey[] = ['project', 'partnership', 'other'];
-const selectorVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' as const, staggerChildren: 0.13, delayChildren: 0.08 } }, exit: { opacity: 0, y: -18, transition: { duration: 0.35, ease: 'easeIn' as const } } };
+const selectorVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.06 } }, exit: { opacity: 0, y: -18, transition: { duration: 0.35, ease: 'easeIn' as const } } };
 const itemVariants = { hidden: { opacity: 0, y: 24, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.62, ease: 'easeOut' as const } } };
 const formVariants = { hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.58, ease: 'easeOut' as const, staggerChildren: 0.07, delayChildren: 0.1 } }, exit: { opacity: 0, y: 18, transition: { duration: 0.35, ease: 'easeIn' as const } } };
 const fieldVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' as const } } };
@@ -79,8 +80,8 @@ function ContactOptionCard({ journey, selected, onSelect, reduced }: { journey: 
 }
 
 function ContactSelector({ onSelect, selected, reduced }: { onSelect: (journey: Journey) => void; selected?: Journey; reduced: boolean | null }) {
-  return <motion.div className={styles.selector} variants={reduced ? undefined : selectorVariants} initial={reduced ? undefined : 'hidden'} animate={reduced ? undefined : 'visible'} exit={reduced ? undefined : 'exit'}>
-    <div className={styles.selectorHeader}><span className={styles.selectorEyebrow}>Contato</span><h2>Fale com a gente</h2></div>
+  return <motion.div className={styles.selector} variants={reduced ? undefined : selectorVariants} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.25 }} exit={reduced ? undefined : 'exit'}>
+    <motion.div className={styles.selectorHeader} variants={reduced ? undefined : staggerContainer}><motion.span className={styles.selectorEyebrow} variants={reduced ? undefined : fadeUp}>Contato</motion.span><motion.h2 variants={reduced ? undefined : headingReveal}>Fale com a gente</motion.h2></motion.div>
     <div className={styles.optionGrid}>{optionOrder.map(journey => <ContactOptionCard key={journey} journey={journey} selected={selected === journey} onSelect={onSelect} reduced={reduced} />)}</div>
   </motion.div>;
 }
