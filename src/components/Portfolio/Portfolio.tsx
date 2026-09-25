@@ -3,12 +3,18 @@ import { AnimatePresence } from 'framer-motion';
 import { SectionTitle } from '../SectionTitle/SectionTitle';
 import { CasesCarousel } from '../CasesCarousel/CasesCarousel';
 import { ecommerceCase, habilitaCase, labExperienceCase, ProjectCaseOverlay, senaiLabExperienceCase, type ProjectCaseData } from '../ProjectCase/ProjectCaseOverlay';
+import { caseItems } from '../CasesCarousel/casesData';
 
 export function Portfolio() {
   const [caseOpen, setCaseOpen] = useState(false);
   const [activeProject, setActiveProject] = useState<ProjectCaseData>(labExperienceCase);
   const firstCardRef = useRef<HTMLElement>(null);
-  const openCase = useCallback((caseId: string) => { setActiveProject(caseId === 'industria' ? ecommerceCase : caseId === 'dados' ? habilitaCase : caseId === 'educacao-saude' ? senaiLabExperienceCase : labExperienceCase); setCaseOpen(true); }, []);
+  const openCase = useCallback((caseId: string) => {
+    const project = caseId === 'industria' ? ecommerceCase : caseId === 'dados' ? habilitaCase : caseId === 'educacao-saude' ? senaiLabExperienceCase : labExperienceCase;
+    const card = caseItems.find(item => item.id === caseId);
+    setActiveProject({ ...project, summary: card?.description });
+    setCaseOpen(true);
+  }, []);
   const closeCase = useCallback(() => setCaseOpen(false), []);
 
   return (

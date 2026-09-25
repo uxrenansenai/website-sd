@@ -65,8 +65,6 @@ export function Header() {
           <Button className="header__mobile-cta" variant="primary-dark" href="#contato" showArrow={false} onClick={() => setOpen(false)}>Fale com nosso time</Button>
         </nav>
         <div className="header__actions">
-          <span className="header__locale"><b>PT</b> / EN</span>
-          <span className="header__divider" aria-hidden="true" />
           <Button className="header__cta" variant="primary-dark" href="#contato" showArrow={false}>Fale com nosso time</Button>
         </div>
         <button className="header__menu" type="button" aria-label={open ? 'Fechar menu' : 'Abrir menu'} aria-expanded={open} onClick={() => setOpen(current => !current)}>{open ? <X /> : <Menu />}</button>

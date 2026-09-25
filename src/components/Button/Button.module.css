@@ -4,6 +4,7 @@
 .primary-light{background:#0a8aff;border-color:#0a8aff;color:#fff}
 .primary-light:hover{border-color:#3aa5ff;background:#0878dc;box-shadow:0 0 0 1px rgb(10 138 255 / 35%),0 0 16px rgb(10 138 255 / 24%),0 0 28px rgb(10 138 255 / 10%)}
 .text-link{min-height:0;border-color:transparent;border-radius:0;background:transparent;padding:0;color:inherit;box-shadow:none}
+.brand{background:rgb(0 0 0 / 16%);border-color:rgb(255 255 255 / 58%);color:#fff}.brand:hover{border-color:#fff;background:rgb(255 255 255 / 10%);box-shadow:0 0 0 1px rgb(255 255 255 / 24%),0 0 16px rgb(10 138 255 / 28%),0 0 28px rgb(255 255 255 / 10%)}
 .text-link:hover{background:transparent;border-color:transparent;color:inherit;box-shadow:none}
 .button:focus-visible{outline:2px solid #0a8aff;outline-offset:3px}
 .button:hover{transform:translateY(-1px)}

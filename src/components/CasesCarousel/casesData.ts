@@ -38,7 +38,7 @@ export const caseItems: CaseItem[] = [
     id: 'mobile', title: 'E muito mais', category: 'E muito mais',
     description: 'Soluções digitais desenvolvidas para diferentes desafios, setores e jornadas de inovação.',
     tags: [], visual: 'logosGrid', logos: [
-      '/figma/cases-v2/more/01-ee.svg', '/figma/cases-v2/more/02-space.svg', '/figma/cases-v2/more/03-lab.svg', '/figma/cases-v2/more/04-nr10.svg', '/figma/cases-v2/more/05-sin.svg',
+      '/figma/cases-v2/more/02-space.svg', '/figma/cases-v2/more/03-lab.svg', '/figma/cases-v2/more/04-nr10.svg', '/figma/cases-v2/more/05-sin.svg',
       '/figma/cases-v2/more/06-seif.svg', '/figma/cases-v2/more/07-saepia.svg', '/figma/cases-v2/more/08-ava-senai.svg', '/figma/cases-v2/more/09-eleva.svg', '/figma/cases-v2/more/10-orbie.svg',
       '/figma/cases-v2/more/11-devstart.svg', '/figma/cases-v2/more/12-crm.svg', '/figma/cases-v2/more/13-dw.svg',
     ], imageAlt: 'Logos de projetos e soluções digitais',

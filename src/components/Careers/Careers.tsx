@@ -40,7 +40,7 @@ export function Careers() {
 
           <motion.div className={styles.rightBlock} variants={reduced ? undefined : fadeUp}>
             <p>Faça parte de um time que transforma desafios reais em produtos digitais, tecnologia e inovação para a indústria.</p>
-            <Button variant="primary-dark" href={opportunitiesUrl} target="_blank" rel="noopener noreferrer" showArrow={false}>
+            <Button variant="brand" href={opportunitiesUrl} target="_blank" rel="noopener noreferrer" showArrow={false}>
               Conheça nossas oportunidades
             </Button>
           </motion.div>

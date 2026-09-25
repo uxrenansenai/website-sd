@@ -4,7 +4,13 @@ import { ArrowUp, Instagram, Linkedin, Facebook } from 'lucide-react';
 
 
 const navigation = [
-  { text: 'Início', href: '#topo' }, { text: 'Portfólio', href: '#cases' }, { text: 'Serviços', href: '#servicos' }, { text: 'Soluções AWS', href: '#aws' }, { text: 'Sobre', href: '#sobre' }, { text: 'Contato', href: '#contato' }, { text: 'Trabalhe Conosco', href: 'https://fiesc.com.br/trabalhe-conosco' },
+  { text: 'Início', href: '#topo' },
+  { text: 'Cases', href: '#cases' },
+  { text: 'Serviços', href: '#servicos' },
+  { text: 'AWS', href: '#aws' },
+  { text: 'Sobre', href: '#sobre' },
+  { text: 'Trabalhe conosco', href: '#trabalhe-conosco' },
+  { text: 'Na mídia', href: '#midia' },
 ];
 
 export function Footer() {
@@ -68,7 +74,7 @@ export function Footer() {
           <div className="footer__site-map">
             <div className="footer__links"><h2>Navegue</h2>{navigation.map(item => <a href={item.href} key={item.text}>{item.text}</a>)}</div>
             <div className="footer__links"><h2>Social</h2><a href="https://www.instagram.com/senaisolucoesdigitais.sc/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.linkedin.com/company/senai-solu%C3%A7%C3%B5es-digitais/home/" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
-            <div className="footer__links"><h2>Trabalhe conosco</h2><a href="https://fiesc.com.br/trabalhe-conosco" target="_blank" rel="noopener noreferrer">Ver vagas abertas</a><a href="#contato">Contato</a></div>
+            <div className="footer__links"><h2>Trabalhe conosco</h2><a href="https://fiesc.com.br/trabalhe-conosco" target="_blank" rel="noopener noreferrer">Ver vagas abertas</a></div>
           </div>
         </div>
         <div className="footer__divider" />

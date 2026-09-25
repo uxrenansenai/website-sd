@@ -5,6 +5,7 @@ import styles from './ProjectCase.module.css';
 export type ProjectCaseData = {
   title: string;
   category: string;
+  summary?: string;
   logo: string;
   customization: string;
   classroom: string;
@@ -97,7 +98,7 @@ export function ProjectCaseOverlay({ project, onClose, returnFocusRef }: Props) 
   const reduced = useReducedMotion();
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [interests, setInterests] = useState<string[]>(['Inteligência Artificial', 'Nuvem / AWS']);
+  const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -165,6 +166,13 @@ export function ProjectCaseOverlay({ project, onClose, returnFocusRef }: Props) 
           {project.sections.map(section => <motion.article key={section.title} variants={reduced ? undefined : reveal} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.4 }}><h2>{section.title}</h2><p>{section.text}</p></motion.article>)}
         </section>
 
+        <motion.section className={styles.projectIntro} aria-label={`Resumo do projeto ${project.title}`} variants={reduced ? undefined : reveal} initial={reduced ? undefined : 'hidden'} whileInView={reduced ? undefined : 'visible'} viewport={{ once: true, amount: 0.35 }}>
+          <span className={styles.eyebrow}>PROJETO</span>
+          <h2>{project.title}</h2>
+          {project.summary && <p>{project.summary}</p>}
+          <div className={styles.projectTags}>{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+        </motion.section>
+
         <section className={styles.inquiry} aria-label="Formulário de projeto">
           <div className={styles.summary}><span className={styles.eyebrow}>PROJETOS</span><h2 id="project-case-title">Desenvolva seu projeto digital</h2><p>Conte-nos os detalhes do seu desafio técnico e estratégico. Nossa equipe de especialistas estruturará a melhor estratégia de engenharia, arquitetura em nuvem e inovação para sua operação.</p><span className={styles.progress} aria-hidden="true" /></div>
           <form className={styles.formCard} onSubmit={handleSubmit}>
@@ -176,7 +184,7 @@ export function ProjectCaseOverlay({ project, onClose, returnFocusRef }: Props) 
               <fieldset><legend>Tecnologias de interesse</legend><div className={styles.chips}>{['Inteligência Artificial', 'Mobile', 'Web', 'Nuvem / AWS', 'Dados', 'Realidade Estendida', 'Ainda não sei'].map(item => <button key={item} type="button" className={interests.includes(item) ? styles.chipActive : styles.chip} onClick={() => toggleInterest(item)} aria-pressed={interests.includes(item)}>{item}</button>)}</div></fieldset>
               <label>Mensagem / Descrição do desafio<textarea name="message" placeholder="Escreva os objetivos e contexto do seu projeto" rows={4} /></label>
             </div>
-            <div className={styles.formActions}><button className={styles.backAction} type="button" onClick={onClose}><span aria-hidden="true"><img src="/figma/contact-v2/arrow-left.svg" alt="" /></span>Voltar</button><button className={styles.submit} type="submit">ENVIAR PROPOSTA</button></div>
+            <div className={styles.formActions}><button className={styles.submit} type="submit">ENVIAR PROPOSTA</button></div>
           </form>
         </section>
       </div>
